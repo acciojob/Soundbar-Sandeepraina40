@@ -1,8 +1,8 @@
-//your JS code here. If required.
+// your JS code here. If required.
 const sounds = ["applause", "boo", "gasp", "tada", "victory", "wrong"];
 const buttons = document.getElementById("buttons");
 
-let currentAudio = null; // to keep track of the playing sound
+let currentAudio = null; // Track the currently playing audio
 
 sounds.forEach((sound) => {
   const btn = document.createElement("button");
@@ -11,8 +11,15 @@ sounds.forEach((sound) => {
 
   btn.addEventListener("click", () => {
     stopSounds();
-    currentAudio = new Audio(`sounds/${sound}.mp3`);
-    currentAudio.play();
+
+    // Create an <audio> element and add it to the DOM
+    const audio = document.createElement("audio");
+    audio.src = `sounds/${sound}.mp3`;
+    audio.setAttribute("controls", ""); // optional, for testing visibility
+    document.body.appendChild(audio);
+
+    audio.play();
+    currentAudio = audio;
   });
 
   buttons.appendChild(btn);
@@ -25,10 +32,13 @@ stopBtn.innerText = "Stop";
 stopBtn.addEventListener("click", stopSounds);
 buttons.appendChild(stopBtn);
 
-// Function to stop the current sound
+// Function to stop and remove all audio elements
 function stopSounds() {
-  if (currentAudio) {
-    currentAudio.pause();
-    currentAudio.currentTime = 0;
-  }
+  const audios = document.querySelectorAll("audio");
+  audios.forEach((audio) => {
+    audio.pause();
+    audio.currentTime = 0;
+    audio.remove(); // remove from DOM so tests reset properly
+  });
+  currentAudio = null;
 }
